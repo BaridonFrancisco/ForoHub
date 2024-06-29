@@ -1,0 +1,15 @@
+spring:
+  datasource:
+    username: root
+    url: jdbc:mysql://localhost:3306/forohub
+    password: admin
+  application:
+    name: forohub
+  jpa:
+    properties:
+      hibernate:
+        format_sql: 'true'
+    show-sql: 'true'
+server:
+  error:
+    include-stacktrace: never
