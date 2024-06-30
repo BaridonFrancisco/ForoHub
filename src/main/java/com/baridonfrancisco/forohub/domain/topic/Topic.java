@@ -22,10 +22,17 @@ public class Topic {
     private String message;
     private LocalDateTime creationTime;
     @Enumerated(EnumType.STRING)
-    private Status status;
+    private Topic_Status topic_status;
 
-    private Author author;
+
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    private User user;
+    @ManyToOne
+    @JoinColumn(name = "course_id")
     private Course course;
+
+    @OneToMany(mappedBy = "topic",cascade = CascadeType.ALL,fetch = FetchType.EAGER)
     private List<Response> listResponses;
 
 }

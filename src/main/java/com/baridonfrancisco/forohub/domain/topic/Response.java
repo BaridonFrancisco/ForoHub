@@ -1,7 +1,6 @@
 package com.baridonfrancisco.forohub.domain.topic;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.*;
 import java.time.LocalDateTime;
 
@@ -14,17 +13,24 @@ import java.time.LocalDateTime;
 @ToString
 @EqualsAndHashCode(of = "id")
 public class Response {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     private String message;
 
+
+    @ManyToOne
+    @JoinColumn(name = "topic_id")
     private Topic topic;
 
     private LocalDateTime creationDate;
 
-    private Author author;
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    private User user;
 
-    private String resolved;
+    private String solution;
 
 
 
