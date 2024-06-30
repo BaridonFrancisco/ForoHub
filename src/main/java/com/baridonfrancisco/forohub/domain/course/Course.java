@@ -1,4 +1,4 @@
-package com.baridonfrancisco.forohub.domain.topic;
+package com.baridonfrancisco.forohub.domain.course;
 
 import jakarta.persistence.*;
 import lombok.*;

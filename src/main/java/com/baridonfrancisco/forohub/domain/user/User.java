@@ -1,5 +1,7 @@
-package com.baridonfrancisco.forohub.domain.topic;
+package com.baridonfrancisco.forohub.domain.user;
 
+import com.baridonfrancisco.forohub.domain.response.Response;
+import com.baridonfrancisco.forohub.domain.topic.Topic;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -32,7 +34,10 @@ public class User {
     @Enumerated(EnumType.STRING)
     private Profile profile;
 
-
-
-
+    public User(UserData userData) {
+        this.user_name=userData.userName();
+        this.email=userData.email();
+        this.password=userData.password();
+        this.profile=Profile.USER;
+    }
 }

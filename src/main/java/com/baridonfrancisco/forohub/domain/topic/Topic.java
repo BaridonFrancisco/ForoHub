@@ -1,5 +1,8 @@
 package com.baridonfrancisco.forohub.domain.topic;
 
+import com.baridonfrancisco.forohub.domain.course.Course;
+import com.baridonfrancisco.forohub.domain.response.Response;
+import com.baridonfrancisco.forohub.domain.user.User;
 import jakarta.persistence.*;
 import lombok.*;
 import java.time.LocalDateTime;
