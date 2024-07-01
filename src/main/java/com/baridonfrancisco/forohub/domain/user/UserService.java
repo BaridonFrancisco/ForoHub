@@ -11,7 +11,6 @@ public class UserService {
     @Autowired
     UserRepository userRepository;
 
-
     public UserDTOCreate createUser(UserData userData) {
         User user = new User(userData);
         userRepository.save(user);
@@ -21,7 +20,6 @@ public class UserService {
 
 
     }
-
 
     public UserDTOGet retrieveUser(Long id) {
        return userRepository.findById(id)
@@ -34,4 +32,22 @@ public class UserService {
         return userRepository.findAllUsers(pageable)
                 .map(UserDTOGet::new);
     }
+
+    public UserDTOUpdate updateUser(UserDataUpdate dateUpdate) {
+        var userdb = userRepository.findById(dateUpdate.id()).map(user -> {
+
+            if(dateUpdate.username()!=null && !dateUpdate.username().isBlank()){
+                user.setUser_name(dateUpdate.username());
+            }
+
+            user.setEmail(dateUpdate.email());
+            return user;
+        }).orElseThrow(() -> new RuntimeException("User not Found"));
+        userRepository.save(userdb);
+        return new UserDTOUpdate(userdb.getUser_name(), userdb.getPassword(), userdb.getEmail());
+
+    }
+
+
+
 }

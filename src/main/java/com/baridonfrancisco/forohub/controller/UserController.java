@@ -41,5 +41,13 @@ public class UserController {
         return ResponseEntity.ok(users);
     }
 
+    @PutMapping
+    @Transactional
+    public ResponseEntity<UserDTOUpdate>updateUser(@RequestBody @Valid UserDataUpdate dataUser){
+        var userUpdate=userService.updateUser(dataUser);
+        return ResponseEntity.ok(userUpdate);
+
+    }
+
 
 }
