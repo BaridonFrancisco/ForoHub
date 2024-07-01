@@ -17,7 +17,8 @@ public class Course {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String course_name;
+    @Column(name = "coursename")
+    private String courseName;
     @Enumerated(EnumType.STRING)
     private Category category;
 
