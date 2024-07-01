@@ -1,6 +1,8 @@
 package com.baridonfrancisco.forohub.domain.user;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -21,4 +23,15 @@ public class UserService {
     }
 
 
+    public UserDTOGet retrieveUser(Long id) {
+       return userRepository.findById(id)
+                .map(UserDTOGet::new)
+               .orElse(null);
+
+    }
+
+    public Page<UserDTOGet> findAllUser(Pageable pageable) {
+        return userRepository.findAllUsers(pageable)
+                .map(UserDTOGet::new);
+    }
 }

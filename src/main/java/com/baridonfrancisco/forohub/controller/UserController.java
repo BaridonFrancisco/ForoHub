@@ -1,16 +1,14 @@
 package com.baridonfrancisco.forohub.controller;
 
-import com.baridonfrancisco.forohub.domain.user.User;
-import com.baridonfrancisco.forohub.domain.user.UserDTOCreate;
-import com.baridonfrancisco.forohub.domain.user.UserData;
-import com.baridonfrancisco.forohub.domain.user.UserService;
+import com.baridonfrancisco.forohub.domain.user.*;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/users")
@@ -21,10 +19,27 @@ public class UserController {
 
     //TODO verificar que el usuario no existe antes de registrar
     @PostMapping
+    @Transactional
     public ResponseEntity<UserDTOCreate> createUser(@RequestBody @Valid UserData userData){
       var user=userService.createUser(userData);
 
       return ResponseEntity.status(201)
               .body(user);
     }
+
+    @GetMapping("/{id}")
+    @Transactional
+    public ResponseEntity<UserDTOGet> retrieveUser(@PathVariable Long id){
+            var user=userService.retrieveUser(id);
+            return ResponseEntity.ok(user);
+
+
+    }
+    @GetMapping
+    public ResponseEntity<Page<UserDTOGet>> findAllUsers(@PageableDefault(value = 10) Pageable pageable){
+        var users=userService.findAllUser(pageable);
+        return ResponseEntity.ok(users);
+    }
+
+
 }
