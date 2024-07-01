@@ -40,7 +40,13 @@ public class UserService {
                 user.setUser_name(dateUpdate.username());
             }
 
-            user.setEmail(dateUpdate.email());
+           if(dateUpdate.email()!=null && !dateUpdate.email().isBlank()){
+                user.setEmail(dateUpdate.email());
+            }
+
+            if(dateUpdate.password()!=null && !dateUpdate.password().isEmpty()){
+                user.setPassword(dateUpdate.password());
+            }
             return user;
         }).orElseThrow(() -> new RuntimeException("User not Found"));
         userRepository.save(userdb);
@@ -49,5 +55,7 @@ public class UserService {
     }
 
 
-
+    public void deleteUser(Long id) {
+        userRepository.deleteById(id);
+    }
 }
