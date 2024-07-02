@@ -14,8 +14,8 @@ import java.util.List;
 @NoArgsConstructor
 @Getter
 @Setter
-@ToString
 @EqualsAndHashCode(of = "id")
+@ToString(exclude = "listTopic")
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

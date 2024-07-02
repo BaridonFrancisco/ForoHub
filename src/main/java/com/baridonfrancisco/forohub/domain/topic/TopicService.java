@@ -6,6 +6,8 @@ import com.baridonfrancisco.forohub.domain.user.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class TopicService {
 
@@ -34,6 +36,11 @@ public class TopicService {
         }
         throw new RuntimeException("Course or User not found");
 
+    }
 
+    public List<TopicDTOGet> getAllTopics() {
+        return topicRepository.findAll().stream()
+                .map(TopicDTOGet::new)
+                .toList();
     }
 }

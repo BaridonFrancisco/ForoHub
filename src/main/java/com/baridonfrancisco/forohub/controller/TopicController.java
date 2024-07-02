@@ -1,16 +1,13 @@
 package com.baridonfrancisco.forohub.controller;
 
-import com.baridonfrancisco.forohub.domain.topic.TopicDTOCreate;
-import com.baridonfrancisco.forohub.domain.topic.TopicData;
-import com.baridonfrancisco.forohub.domain.topic.TopicService;
+import com.baridonfrancisco.forohub.domain.topic.*;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/topics")
@@ -30,9 +27,21 @@ public class TopicController {
 
     }
     // obtiene un topico por el id
-    public void getTopicById(){
+    @GetMapping("/{id}")
+    public void getTopicById(@PathVariable Long id){
 
     }
+
+    @GetMapping
+    @Transactional
+    public ResponseEntity<List<TopicDTOGet>> getAllTopics(){
+        var topics=topicService.getAllTopics();
+        return ResponseEntity.ok(topics);
+
+    }
+
+
+
     // modificar topico
 
 
