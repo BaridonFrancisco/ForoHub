@@ -28,8 +28,9 @@ public class TopicController {
     }
     // obtiene un topico por el id
     @GetMapping("/{id}")
-    public void getTopicById(@PathVariable Long id){
-
+    @Transactional
+    public ResponseEntity<TopicDTOGet> getTopicById(@PathVariable Long id){
+        return ResponseEntity.ok(topicService.getTopic(id));
     }
 
     @GetMapping
@@ -39,6 +40,7 @@ public class TopicController {
         return ResponseEntity.ok(topics);
 
     }
+
 
     // modificar topico
 

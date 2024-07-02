@@ -4,6 +4,7 @@ package com.baridonfrancisco.forohub.domain.topic;
 import com.baridonfrancisco.forohub.domain.course.CourseRepository;
 import com.baridonfrancisco.forohub.domain.user.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -46,5 +47,12 @@ public class TopicService {
 
     public void deleteTopic(Long id) {
         topicRepository.deleteById(id);
+    }
+
+    public TopicDTOGet getTopic(Long id) {
+       return topicRepository.findById(id)
+               .map(TopicDTOGet::new)
+               .orElseThrow(RuntimeException::new);
+
     }
 }
