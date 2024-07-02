@@ -43,4 +43,8 @@ public class TopicService {
                 .map(TopicDTOGet::new)
                 .toList();
     }
+
+    public void deleteTopic(Long id) {
+        topicRepository.deleteById(id);
+    }
 }

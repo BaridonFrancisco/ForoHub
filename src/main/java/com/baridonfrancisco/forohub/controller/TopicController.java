@@ -40,11 +40,13 @@ public class TopicController {
 
     }
 
-
-
     // modificar topico
 
-
     // eliminar topico
+    @DeleteMapping("{id}")
+    @Transactional
+    public void deleteTopic(@PathVariable Long id){
+        topicService.deleteTopic(id);
+    }
 
 }
