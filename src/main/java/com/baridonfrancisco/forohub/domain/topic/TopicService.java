@@ -4,6 +4,7 @@ package com.baridonfrancisco.forohub.domain.topic;
 import com.baridonfrancisco.forohub.domain.course.Course;
 import com.baridonfrancisco.forohub.domain.course.CourseRepository;
 import com.baridonfrancisco.forohub.domain.topic.dto.TopicDTOUpdate;
+import com.baridonfrancisco.forohub.domain.topic.validation.DuplicateFields;
 import com.baridonfrancisco.forohub.domain.user.User;
 import com.baridonfrancisco.forohub.domain.user.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,12 +24,20 @@ public class TopicService {
     @Autowired
     CourseRepository courseRepository;
 
+    @Autowired
+    DuplicateFields duplicateFields;
+
     public TopicDTOCreate  registerTopic(TopicData data){
-        //TODO comprobar que no exista un topico con el mismo titulo y mensaje
+
         var user=userRepository.findById(data.user());
         var course=courseRepository.findByCourseNameIgnoreCase(data.course());
+
+        duplicateFields.validate(data);
+
         if(course.isPresent() && user.isPresent()){
             Topic topic=new Topic(data,course.get(),user.get());
+            topic.setMessage(removeBlank(topic.getMessage()));
+            topic.setTitle(removeBlank(topic.getTitle()));
             var topicDb = topicRepository.save(topic);
             return new TopicDTOCreate(topicDb.getUser().getId(),
                     course.get().getId(),
@@ -53,19 +62,21 @@ public class TopicService {
     }
 
     public TopicDTOGet getTopic(Long id) {
-       return topicRepository.findById(id)
+        return topicRepository.findById(id)
                .map(TopicDTOGet::new)
                .orElseThrow(RuntimeException::new);
 
     }
 
     public TopicDTOUpdate updateTopic(TopicDTOUpdateData data, Long id) {
+        // si no existe el id es vano hacer las otras operaciones
 
         var user = userRepository.findById(data.user());
+        duplicateFields.validate(data);
         var course = courseRepository.findByCourseNameIgnoreCase(data.course());
         var topic = topicRepository.findById(id);
-        var topicDb = topic.map(newTopic -> {
 
+        var topicDb = topic.map(newTopic -> {
             course.ifPresent(newTopic::setCourse);
 
             if (data.title() != null && !data.title().isBlank()) {
@@ -90,6 +101,9 @@ public class TopicService {
     public User checkUser(Long id){
         return userRepository.findById(id)
                 .orElse(null);
+    }
+    public String removeBlank(String str){
+       return str.replaceAll("^\\s+|\\s+$","");
     }
 
 

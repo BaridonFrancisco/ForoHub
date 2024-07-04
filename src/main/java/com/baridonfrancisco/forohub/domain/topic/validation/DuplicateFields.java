@@ -1,4 +1,30 @@
 package com.baridonfrancisco.forohub.domain.topic.validation;
 
-public class DuplicateFields {
+
+import com.baridonfrancisco.forohub.domain.topic.TopicDTOUpdateData;
+import com.baridonfrancisco.forohub.domain.topic.TopicData;
+import com.baridonfrancisco.forohub.domain.topic.TopicRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+
+@Component
+public class DuplicateFields implements Validation {
+
+    @Autowired
+    TopicRepository topicRepository;
+
+    @Override
+    public <T> void validate(T t) {
+        boolean res = false;
+        if (t instanceof TopicData data) {
+            res = topicRepository.existsByTitleIgnoreCaseAndMessageIgnoreCase(data.title(), data.message());
+
+        }
+        if (t instanceof TopicDTOUpdateData data) {
+            res = topicRepository.existsByTitleIgnoreCaseAndMessageIgnoreCase(data.title(), data.message());
+
+        }
+        if (res) throw new RuntimeException("Topic and Message Duplicated");
+
+    }
 }
