@@ -2,9 +2,9 @@ package com.baridonfrancisco.forohub.domain.topic;
 
 
 import com.baridonfrancisco.forohub.domain.course.CourseRepository;
+import com.baridonfrancisco.forohub.domain.topic.dto.TopicDTOUpdate;
 import com.baridonfrancisco.forohub.domain.user.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -45,6 +45,7 @@ public class TopicService {
                 .toList();
     }
 
+    //TODO modificar
     public void deleteTopic(Long id) {
         topicRepository.deleteById(id);
     }
@@ -53,6 +54,38 @@ public class TopicService {
        return topicRepository.findById(id)
                .map(TopicDTOGet::new)
                .orElseThrow(RuntimeException::new);
+
+    }
+
+    //TODO crear un DTO para los datos de entrada y otro para la salida
+    public TopicDTOUpdate updateTopic(TopicDTOUpdateData data, Long id){
+        var user=userRepository.findById(data.user());
+        var course=courseRepository.findByCourseNameIgnoreCase(data.course());
+        if(user.isPresent() && course.isPresent()){
+           var topic= topicRepository.findById(id);
+         var topicDb=topic.map(newTopic->{
+               if(data.course()!=null && !data.course().isBlank()){
+                   newTopic.getCourse().setCourseName(data.course());
+               }
+               if(data.title()!=null && !data.title().isBlank()){
+                   newTopic.setTitle(data.title());
+               }
+               if(data.message()!=null && !data.message().isBlank()){
+                   newTopic.setMessage(data.message());
+               }
+               if(data.user()!=0){
+                   System.out.println("id user " +data.user());
+                   System.out.println("distinto a 0");
+               }
+               return newTopic;
+           }).orElseThrow(RuntimeException::new);
+           topicRepository.save(topicDb);
+          return new TopicDTOUpdate(topicDb.getTitle(),topicDb.getMessage(),topicDb.getUser().getId(),topicDb.getCourse().getCourseName());
+
+
+        }
+        throw  new RuntimeException("User or Course not found");
+
 
     }
 }

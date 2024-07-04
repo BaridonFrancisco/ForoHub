@@ -1,7 +1,6 @@
 package com.baridonfrancisco.forohub.domain.topic;
 
-import com.baridonfrancisco.forohub.domain.user.User;
-import jakarta.validation.constraints.Email;
+
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 

@@ -1,6 +1,7 @@
 package com.baridonfrancisco.forohub.controller;
 
 import com.baridonfrancisco.forohub.domain.topic.*;
+import com.baridonfrancisco.forohub.domain.topic.dto.TopicDTOUpdate;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -43,6 +44,14 @@ public class TopicController {
 
 
     // modificar topico
+    @PutMapping("/{id}")
+    @Transactional
+    public ResponseEntity<TopicDTOUpdate> updateTopic(@RequestBody TopicDTOUpdateData data, @PathVariable Long id){
+        var topic=topicService.updateTopic(data,id);
+        return ResponseEntity.status(200).body(topic);
+    }
+
+
 
     // eliminar topico
     @DeleteMapping("{id}")
