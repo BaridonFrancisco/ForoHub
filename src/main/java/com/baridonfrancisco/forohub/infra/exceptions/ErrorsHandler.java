@@ -44,7 +44,7 @@ public class ErrorsHandler {
 
     }
 
-    
+
 
     private record DataError(String field,String error) {
         public DataError(FieldError error) {
