@@ -1,16 +1,17 @@
 package com.baridonfrancisco.forohub.domain.topic;
 
 
-import com.baridonfrancisco.forohub.domain.course.Course;
 import com.baridonfrancisco.forohub.domain.course.CourseRepository;
 import com.baridonfrancisco.forohub.domain.topic.dto.TopicDTOUpdate;
 import com.baridonfrancisco.forohub.domain.topic.validation.DuplicateFields;
-import com.baridonfrancisco.forohub.domain.user.User;
 import com.baridonfrancisco.forohub.domain.user.UserRepository;
+import com.baridonfrancisco.forohub.infra.exceptions.CourseException;
+import com.baridonfrancisco.forohub.infra.exceptions.TopicException;
+import com.baridonfrancisco.forohub.infra.exceptions.UserException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
 import java.util.List;
+
 
 @Service
 public class TopicService {
@@ -27,26 +28,24 @@ public class TopicService {
     @Autowired
     DuplicateFields duplicateFields;
 
+
+
     public TopicDTOCreate  registerTopic(TopicData data){
-
-        var user=userRepository.findById(data.user());
-        var course=courseRepository.findByCourseNameIgnoreCase(data.course());
-
         duplicateFields.validate(data);
+        var user = userRepository.findById(data.user()).orElseThrow(()->new UserException("User not Found"));
+        var course = courseRepository.findByCourseNameIgnoreCase(data.course()).orElseThrow(()->new CourseException("Course not Found"));
 
-        if(course.isPresent() && user.isPresent()){
-            Topic topic=new Topic(data,course.get(),user.get());
-            topic.setMessage(removeBlank(topic.getMessage()));
-            topic.setTitle(removeBlank(topic.getTitle()));
-            var topicDb = topicRepository.save(topic);
-            return new TopicDTOCreate(topicDb.getUser().getId(),
-                    course.get().getId(),
-                    topicDb.getTitle(),
-                    topicDb.getMessage(),
-                    topicDb.getTopic_status().name(),
-                    course.get().getCourseName(),course.get().getCategory(),topicDb.getCreationTime());
-        }
-        throw new RuntimeException("Course or User not found");
+        Topic topic = new Topic(data, course, user);
+        topic.setMessage(removeBlank(topic.getMessage()));
+        topic.setTitle(removeBlank(topic.getTitle()));
+        var topicDb = topicRepository.save(topic);
+        return new TopicDTOCreate(topicDb.getUser().getId(),
+                course.getId(),
+                topicDb.getTitle(),
+                topicDb.getMessage(),
+                topicDb.getTopic_status().name(),
+                course.getCourseName(), course.getCategory(), topicDb.getCreationTime());
+
 
     }
 
@@ -56,7 +55,7 @@ public class TopicService {
                 .toList();
     }
 
-    //TODO modificar
+    //TODO modificar implementar borrado logico
     public void deleteTopic(Long id) {
         topicRepository.deleteById(id);
     }
@@ -76,33 +75,26 @@ public class TopicService {
         var course = courseRepository.findByCourseNameIgnoreCase(data.course());
         var topic = topicRepository.findById(id);
 
+
         var topicDb = topic.map(newTopic -> {
             course.ifPresent(newTopic::setCourse);
 
             if (data.title() != null && !data.title().isBlank()) {
-                newTopic.setTitle(data.title());
+                newTopic.setTitle(removeBlank(data.title()));
             }
             if (data.message() != null && !data.message().isBlank()) {
-                newTopic.setMessage(data.message());
+                newTopic.setMessage(removeBlank(data.message()));
             }
             user.ifPresent(newTopic::setUser);
             return newTopic;
-        }).orElseThrow(RuntimeException::new);
+        }).orElseThrow(()-> new TopicException("Topic not found"));
         topicRepository.save(topicDb);
         return new TopicDTOUpdate(topicDb.getTitle(), topicDb.getMessage(), topicDb.getUser().getId(), topicDb.getCourse().getCourseName());
 
 
     }
 
-    public Course checkCourse(String courseName){
-        return courseRepository.findByCourseNameIgnoreCase(courseName)
-                .orElse(null);
-    }
-    public User checkUser(Long id){
-        return userRepository.findById(id)
-                .orElse(null);
-    }
-    public String removeBlank(String str){
+    private String removeBlank(String str){
        return str.replaceAll("^\\s+|\\s+$","");
     }
 
