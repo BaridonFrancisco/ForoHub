@@ -1,6 +1,8 @@
 package com.baridonfrancisco.forohub.infra.exceptions;
 
 
+import org.springframework.validation.FieldError;
+
 public class UserException extends RuntimeException {
 
     public UserException() {
@@ -8,6 +10,7 @@ public class UserException extends RuntimeException {
 
     public UserException(String message) {
         super(message);
+
     }
 
     public UserException(String message, Throwable cause) {
@@ -21,5 +24,7 @@ public class UserException extends RuntimeException {
     public UserException(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace) {
         super(message, cause, enableSuppression, writableStackTrace);
     }
+
+
 
 }

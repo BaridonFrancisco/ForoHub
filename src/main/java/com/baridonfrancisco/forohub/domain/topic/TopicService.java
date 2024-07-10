@@ -32,6 +32,7 @@ public class TopicService {
 
     public TopicDTOCreate  registerTopic(TopicData data){
         duplicateFields.validate(data);
+
         var user = userRepository.findById(data.user()).orElseThrow(()->new UserException("User not Found"));
         var course = courseRepository.findByCourseNameIgnoreCase(data.course()).orElseThrow(()->new CourseException("Course not Found"));
 
@@ -63,7 +64,7 @@ public class TopicService {
     public TopicDTOGet getTopic(Long id) {
         return topicRepository.findById(id)
                .map(TopicDTOGet::new)
-               .orElseThrow(RuntimeException::new);
+               .orElseThrow(()->new TopicException("Topic not Found"));
 
     }
 
