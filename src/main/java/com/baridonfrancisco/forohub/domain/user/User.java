@@ -4,8 +4,12 @@ import com.baridonfrancisco.forohub.domain.response.Response;
 import com.baridonfrancisco.forohub.domain.topic.Topic;
 import jakarta.persistence.*;
 import lombok.*;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
 
+import java.util.Collection;
 import java.util.List;
 
 @Table(name = "Users")
@@ -16,12 +20,12 @@ import java.util.List;
 @Setter
 @EqualsAndHashCode(of = "id")
 @ToString(exclude = "listTopic")
-public class User {
+public class User implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
-    private String user_name;
+    @Column(name = "user_name")
+    private String userName;
     private String email;
     private String password;
 
@@ -35,11 +39,42 @@ public class User {
     private Profile profile;
 
     public User(UserData userData) {
-        this.user_name=userData.userName();
+        this.userName =userData.userName();
         this.email=userData.email();
         this.password=userData.password();
         this.profile=Profile.USER;
     }
 
 
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return List.of(new SimpleGrantedAuthority("Rol_User"));
+    }
+
+
+
+    @Override
+    public String getUsername() {
+        return this.userName;
+    }
+
+    @Override
+    public boolean isAccountNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isAccountNonLocked() {
+        return true;
+    }
+
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return true;
+    }
 }

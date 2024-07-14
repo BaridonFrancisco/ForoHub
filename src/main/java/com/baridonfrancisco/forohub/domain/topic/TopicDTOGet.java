@@ -17,7 +17,7 @@ public record TopicDTOGet(
 
 ) {
     public TopicDTOGet(Topic topic){
-        this(topic.getId(),topic.getUser().getUser_name(),topic.getTitle(),topic.getMessage(),topic.getCreationTime(),topic.getTopic_status(),topic.getCourse().getCourseName(),topic.getListResponses());
+        this(topic.getId(),topic.getUser().getUsername(),topic.getTitle(),topic.getMessage(),topic.getCreationTime(),topic.getTopic_status(),topic.getCourse().getCourseName(),topic.getListResponses());
     }
 
 

@@ -14,7 +14,7 @@ public class UserService {
     public UserDTOCreate createUser(UserData userData) {
         User user = new User(userData);
         userRepository.save(user);
-        return new UserDTOCreate(user.getUser_name(),
+        return new UserDTOCreate(user.getUsername(),
                 user.getPassword(),
                 user.getEmail(), user.getProfile());
 
@@ -37,7 +37,7 @@ public class UserService {
         var userdb = userRepository.findById(dateUpdate.id()).map(user -> {
 
             if(dateUpdate.username()!=null && !dateUpdate.username().isBlank()){
-                user.setUser_name(dateUpdate.username());
+                user.setUserName(dateUpdate.username());
             }
 
            if(dateUpdate.email()!=null && !dateUpdate.email().isBlank()){
@@ -50,7 +50,7 @@ public class UserService {
             return user;
         }).orElseThrow(() -> new RuntimeException("User not Found"));
         userRepository.save(userdb);
-        return new UserDTOUpdate(userdb.getUser_name(), userdb.getPassword(), userdb.getEmail());
+        return new UserDTOUpdate(userdb.getUsername(), userdb.getPassword(), userdb.getEmail());
 
     }
 

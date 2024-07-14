@@ -10,7 +10,7 @@ public record UserDTOGet(
 
 ) {
     public UserDTOGet(User user){
-        this(user.getId(),user.getUser_name(),user.getPassword(),user.getEmail(),user.getProfile());
+        this(user.getId(),user.getUsername(),user.getPassword(),user.getEmail(),user.getProfile());
     }
 
 }
