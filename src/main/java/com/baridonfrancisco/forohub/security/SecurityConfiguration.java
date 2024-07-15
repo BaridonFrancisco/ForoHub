@@ -31,6 +31,7 @@ public class SecurityConfiguration {
                 .authorizeHttpRequests(request ->
                         request.requestMatchers("topics/**").permitAll()
                                 .requestMatchers(HttpMethod.POST,"login").permitAll()
+                                .requestMatchers(HttpMethod.POST,"/users").permitAll()
                                 .anyRequest()
                                 .authenticated())
                 .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class)

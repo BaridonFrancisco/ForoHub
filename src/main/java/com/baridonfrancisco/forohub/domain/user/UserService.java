@@ -3,6 +3,7 @@ package com.baridonfrancisco.forohub.domain.user;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -12,10 +13,11 @@ public class UserService {
     UserRepository userRepository;
 
     public UserDTOCreate createUser(UserData userData) {
+        String passRef=userData.password();
         User user = new User(userData);
         userRepository.save(user);
         return new UserDTOCreate(user.getUsername(),
-                user.getPassword(),
+                passRef,
                 user.getEmail(), user.getProfile());
 
 
@@ -45,7 +47,7 @@ public class UserService {
             }
 
             if(dateUpdate.password()!=null && !dateUpdate.password().isEmpty()){
-                user.setPassword(dateUpdate.password());
+                user.setPassword(new BCryptPasswordEncoder().encode(dateUpdate.password()));
             }
             return user;
         }).orElseThrow(() -> new RuntimeException("User not Found"));
