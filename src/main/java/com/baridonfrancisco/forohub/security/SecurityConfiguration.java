@@ -40,8 +40,7 @@ public class SecurityConfiguration {
     }
     /*AuthenticationManager es una interfaz que define como Spring
     * Security realizara el proceso de autenticacion
-    * AuthenticationProvider es una clase que usualemente implementa
-    * a AuthenticactionManager*/
+    * Provaider es el encargado de realizar las validaciones*/
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration) throws Exception {
         return authenticationConfiguration.getAuthenticationManager();

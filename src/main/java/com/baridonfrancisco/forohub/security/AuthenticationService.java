@@ -7,8 +7,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
-/*Encargado de traer al usuario
-* por medio del UserDetails*/
+
 
 @Service
 public class AuthenticationService implements UserDetailsService {
