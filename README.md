@@ -8,10 +8,16 @@ pueden plantear sus inquietudes por medio de topicos que otros usuarios pueden r
 La aplicacion fue pensada como un foro interactivo, donde interactúan tanto alumnos como maestros respondiendo
 sus dudas de distintos cursos atravez de topicos.
 
-## Tecnologias
+## 🔧 Tecnologias
+![Static Badge](https://img.shields.io/badge/Java-17.0.9-orange?style=for-the-badge&link=https%3A%2F%2Fwww.oracle.com%2Fjava%2Ftechnologies%2Fjavase%2Fjdk17-archive-downloads.html)
+![Static Badge](https://img.shields.io/badge/Spring-%236DB33F?style=for-the-badge&logo=spring&logoColor=white&labelColor=%236DB33F&link=https%3A%2F%2Fspring.io%2F)
 
 
-## Funcionalidades 
+
+## Insignia del desafió
+
+
+## 🔨 Funcionalidades 
 La api tiene varias funcionalidades para varios endpoints
 permitiendo hacer un CRUD para cada una de las rutas.
 
@@ -28,19 +34,29 @@ El endpoint `"\users"` permite
 - Eliminar un usuario elimina un usuario existente mediante el id como parametro `{id}`
 - Obtener un usuario por su id 
 
-### Topics 
+#### Topics 
 El endpoint `"\topics"` permite
 - Crea un nuevo topico necesita un en el cuerpo del json como obligatorio`title`,`message`,`course`,`user`.
 - Modificar un topico requiere {id} como parametro en la URI 
 - Elimina un topico requiere del {id} del topico como parametro en la URI
 - Obtiene un topico requiero un {id} como parametro en la URI
-- Obtiene todos topicos.
+- Mostrar todos los Topicos
 
-### Seguridad
+### 🔒 Seguridad
+Para la seguridad se utiliza JWT y como provedor de Authentication se usa la por defecto DAP
 Casi todos los endpoint requieren Autenticacion exceptuando:
 
- **Endpoint de autenticacion** `"/login"` que permite a los usuarios **registrados** autenticarse requiere `user` y `password` en el cuerpo de la solicitud esto devuelve un token que debe ser incluido en el header de la request
+ **Endpoint de autenticacion** `"/login"` que permite a los usuarios **registrados** autenticarse requiere `user` y `password` en el cuerpo de la solicitud esto devuelve un token que debe ser incluido en el header de la request.
+
  **Endpoint de registro de usuarios** `"/users"` que nos permite registrar usuarios nuevos.
+
+## 💽 Demo
+
+## Despliege
+
+## Redes
+
+
 
     
 
