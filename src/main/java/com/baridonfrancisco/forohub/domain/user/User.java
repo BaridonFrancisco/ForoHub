@@ -30,10 +30,10 @@ public class User implements UserDetails {
     private String email;
     private String password;
 
-    @OneToMany(mappedBy = "user",cascade = CascadeType.ALL,fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "user",fetch = FetchType.EAGER)
     private List<Topic> listTopic;
 
-    @OneToMany(mappedBy = "user",cascade = CascadeType.ALL,fetch =FetchType.EAGER)
+    @OneToMany(mappedBy = "user",fetch =FetchType.EAGER)
     private List<Response>listResponse;
 
     @Enumerated(EnumType.STRING)

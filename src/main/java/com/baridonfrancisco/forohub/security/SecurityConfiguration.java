@@ -28,14 +28,17 @@ public class SecurityConfiguration {
 
         return http.csrf(AbstractHttpConfigurer::disable)
                 .sessionManagement(ses -> ses.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-                .authorizeHttpRequests(request ->
-                        request.requestMatchers("topics/**").permitAll()
-                                .requestMatchers(HttpMethod.POST,"login").permitAll()
+                .authorizeHttpRequests(request ->request.requestMatchers(HttpMethod.POST,"login").permitAll()
                                 .requestMatchers(HttpMethod.POST,"/users").permitAll()
                                 .anyRequest()
                                 .authenticated())
                 .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class)
                 .build();
+
+
+     /*   return  http.csrf(AbstractHttpConfigurer::disable)
+                .sessionManagement(ses->ses.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                .build();*/
 
     }
     /*AuthenticationManager es una interfaz que define como Spring

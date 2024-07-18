@@ -36,7 +36,7 @@ public class Topic {
     @JoinColumn(name = "course_id")
     private Course course;
 
-    @OneToMany(mappedBy = "topic",cascade = CascadeType.ALL,fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "topic",cascade = CascadeType.ALL,fetch = FetchType.EAGER,orphanRemoval = true)
     private List<Response> listResponses;
 
     public Topic(TopicData data,Course course,User user) {

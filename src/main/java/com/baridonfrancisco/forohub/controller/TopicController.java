@@ -55,10 +55,11 @@ public class TopicController {
 
 
     // eliminar topico
-    @DeleteMapping("{id}")
+    @DeleteMapping("/{id}")
     @Transactional
-    public void deleteTopic(@PathVariable Long id){
+    public ResponseEntity<Topic> deleteTopic(@PathVariable Long id){
         topicService.deleteTopic(id);
+        return ResponseEntity.noContent().build();
     }
 
 }

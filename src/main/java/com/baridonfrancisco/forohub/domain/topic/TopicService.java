@@ -56,9 +56,19 @@ public class TopicService {
                 .toList();
     }
 
-    //TODO modificar implementar borrado logico
+
     public void deleteTopic(Long id) {
-        topicRepository.deleteById(id);
+       // if(!topicRepository.existsById(id))throw new TopicException("Id not exists");
+        //Topic topic=topicRepository.getReferenceById(id);
+        //System.out.println("Entrando");
+        //System.out.println(topic);
+        //topicRepository.delete(topic);
+
+        Topic topic = topicRepository.findById(id).orElseThrow(() -> new TopicException("el topico "+id+" no existe"));
+        System.out.println(topic);
+        System.out.println(topic.getUser());
+
+        topicRepository.delete(topic);
     }
 
     public TopicDTOGet getTopic(Long id) {
