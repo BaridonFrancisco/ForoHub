@@ -1,5 +1,6 @@
 package com.baridonfrancisco.forohub.domain.user;
 
+import com.baridonfrancisco.forohub.infra.exceptions.UserException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -58,6 +59,7 @@ public class UserService {
 
 
     public void deleteUser(Long id) {
-        userRepository.deleteById(id);
+        User user=userRepository.findById(id).orElseThrow(()->new UserException("User not found"));
+        user.setActive(false);
     }
 }

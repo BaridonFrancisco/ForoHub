@@ -39,11 +39,14 @@ public class User implements UserDetails {
     @Enumerated(EnumType.STRING)
     private Profile profile;
 
+    private boolean active;
+
     public User(UserData userData) {
         this.userName =userData.userName();
         this.email=userData.email();
         this.password=new BCryptPasswordEncoder().encode(userData.password());
         this.profile=Profile.USER;
+        this.active=true;
     }
 
 

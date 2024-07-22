@@ -21,7 +21,7 @@ public class TokenService {
         /*debe llevar una clave unica para los tokens el algoritmo
         * que sirve para decodificar o codificar el hash del codigo encriptado*/
         try {
-
+            System.out.println(System.getenv("secret_key"));
             Algorithm algorithm = Algorithm.HMAC256(System.getenv("secret_key"));
            return JWT.create()
                     .withIssuer("forohub")
@@ -31,6 +31,7 @@ public class TokenService {
                     .sign(algorithm).trim();
 
         } catch (Exception e) {
+            System.out.println(e.getMessage());
            throw new RuntimeException("Token cant not generated");
 
         }
