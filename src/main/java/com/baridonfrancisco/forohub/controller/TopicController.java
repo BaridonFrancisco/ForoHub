@@ -6,6 +6,7 @@ import com.baridonfrancisco.forohub.domain.topic.dto.TopicDTOUpdate;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
@@ -47,6 +48,7 @@ public class TopicController {
     // modificar topico
     @PutMapping("/{id}")
     @Transactional
+    @PreAuthorize("authentication.principal.id == #data.user")
     public ResponseEntity<TopicDTOUpdate> updateTopic(@RequestBody TopicDTOUpdateData data, @PathVariable Long id){
         var topic=topicService.updateTopic(data,id);
         return ResponseEntity.status(200).body(topic);

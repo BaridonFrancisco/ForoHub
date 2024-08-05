@@ -4,13 +4,17 @@ package com.baridonfrancisco.forohub.domain.topic;
 import com.baridonfrancisco.forohub.domain.course.CourseRepository;
 import com.baridonfrancisco.forohub.domain.topic.dto.TopicDTOUpdate;
 import com.baridonfrancisco.forohub.domain.topic.validation.DuplicateFields;
+import com.baridonfrancisco.forohub.domain.user.User;
 import com.baridonfrancisco.forohub.domain.user.UserRepository;
 import com.baridonfrancisco.forohub.infra.exceptions.CourseException;
 import com.baridonfrancisco.forohub.infra.exceptions.TopicException;
 import com.baridonfrancisco.forohub.infra.exceptions.UserException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 import java.util.List;
+import java.util.Objects;
 
 
 @Service
@@ -31,6 +35,7 @@ public class TopicService {
 
 
     public TopicDTOCreate  registerTopic(TopicData data){
+
         duplicateFields.validate(data);
 
         var user = userRepository.findById(data.user()).orElseThrow(()->new UserException("User not Found"));
@@ -80,13 +85,22 @@ public class TopicService {
 
     public TopicDTOUpdate updateTopic(TopicDTOUpdateData data, Long id) {
         // si no existe el id es vano hacer las otras operaciones
-
         var user = userRepository.findById(data.user());
+
+        //verifica si el topico pertenece al usuario
+
         duplicateFields.validate(data);
         var course = courseRepository.findByCourseNameIgnoreCase(data.course());
         var topic = topicRepository.findById(id);
+        Long userId=getUserId();
 
+        if(topic.isPresent()){
+            if(!Objects.equals(topic.get().getUser().getId(), userId)){
+                    throw new RuntimeException("No puede modificar el id de otro user");
+            }
 
+        }
+        
         var topicDb = topic.map(newTopic -> {
             course.ifPresent(newTopic::setCourse);
 
@@ -107,6 +121,17 @@ public class TopicService {
 
     private String removeBlank(String str){
        return str.replaceAll("^\\s+|\\s+$","");
+    }
+
+    private Long getUserId() {
+        String userName = SecurityContextHolder.getContext()
+                .getAuthentication()
+                .getName();
+        return userRepository.findByUserName(userName)
+                .map(User::getId)
+                .orElse(0L);
+
+
     }
 
 

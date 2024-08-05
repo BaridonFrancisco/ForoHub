@@ -2,6 +2,7 @@ package com.baridonfrancisco.forohub.domain.topic;
 
 
 
+
 public record TopicDTOUpdateData(
         String title,
         String message,
