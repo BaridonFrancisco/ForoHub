@@ -47,4 +47,6 @@ public class Topic {
         this.message=data.message();
         this.topic_status=Topic_Status.ACTIVE;
     }
+
+
 }

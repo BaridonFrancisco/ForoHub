@@ -11,10 +11,10 @@ import com.baridonfrancisco.forohub.infra.exceptions.TopicException;
 import com.baridonfrancisco.forohub.infra.exceptions.UserException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 
 
 @Service
@@ -68,17 +68,28 @@ public class TopicService {
         //System.out.println("Entrando");
         //System.out.println(topic);
         //topicRepository.delete(topic);
-
         Topic topic = topicRepository.findById(id).orElseThrow(() -> new TopicException("el topico "+id+" no existe"));
+        checkTopicsUser(topic);
+        topic.setTopic_status(Topic_Status.DISABLED);
         System.out.println(topic);
-        System.out.println(topic.getUser());
-
-        topicRepository.delete(topic);
+        topicRepository.save(topic);
+        //topicRepository.delete(topic);
     }
 
     public TopicDTOGet getTopic(Long id) {
-        return topicRepository.findById(id)
-               .map(TopicDTOGet::new)
+        //mostrar un mensaje que esta deshabilidao
+        // mostrar un mensaje que no lo encontro
+        
+        checkId(id);
+
+        Topic topic=topicRepository.findById(id)
+                .orElseThrow(()->new TopicException("Topic not Found"));
+
+        if(topic.getTopic_status().equals(Topic_Status.DISABLED)){
+            throw new TopicException("The topic be disabled contact to admin");
+        }
+
+        return Optional.of(topic).map(TopicDTOGet::new)
                .orElseThrow(()->new TopicException("Topic not Found"));
 
     }
@@ -92,14 +103,8 @@ public class TopicService {
         duplicateFields.validate(data);
         var course = courseRepository.findByCourseNameIgnoreCase(data.course());
         var topic = topicRepository.findById(id);
-        Long userId=getUserId();
 
-        if(topic.isPresent()){
-            if(!Objects.equals(topic.get().getUser().getId(), userId)){
-                    throw new RuntimeException("No puede modificar el id de otro user");
-            }
-
-        }
+        topic.ifPresent(this::checkTopicsUser);
         
         var topicDb = topic.map(newTopic -> {
             course.ifPresent(newTopic::setCourse);
@@ -122,17 +127,20 @@ public class TopicService {
     private String removeBlank(String str){
        return str.replaceAll("^\\s+|\\s+$","");
     }
-
-    private Long getUserId() {
+    // comprueba si el usuario tiene ese topico con su id
+    private void checkTopicsUser(Topic topic) {
         String userName = SecurityContextHolder.getContext()
                 .getAuthentication()
                 .getName();
-        return userRepository.findByUserName(userName)
+        Long idUser = userRepository.findByUserName(userName)
                 .map(User::getId)
                 .orElse(0L);
-
-
+        if (!Objects.equals(topic.getUser().getId(), idUser)) {
+            throw new UserException("No puede cambiar el topico de otro usuario");
+        }
     }
-
+    private void checkId(Long id){
+        if(id<=0)throw new TopicException("Number id:"+id+" is not valid");
+    }
 
 }
